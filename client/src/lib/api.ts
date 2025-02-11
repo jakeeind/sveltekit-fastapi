@@ -1,6 +1,12 @@
 import { PUBLIC_API_URL } from "$env/static/public";
 
-export default async function apiFetch(endpoint: string, options: RequestInit = {}) {
+interface FetchResponse {
+  data?: any;
+  error?: any;
+  response?: Response;
+}
+
+export async function apiFetch(endpoint: string, options: RequestInit = {}): Promise<FetchResponse> {
   const url = `${PUBLIC_API_URL}${endpoint}`;
   const defaultHeaders = {
     'Content-Type': 'application/json',
@@ -8,7 +14,6 @@ export default async function apiFetch(endpoint: string, options: RequestInit = 
   };
 
   const config: RequestInit = {
-    method: 'GET',
     headers: { ...defaultHeaders, ...options.headers },
     ...options,
   };
@@ -18,23 +23,44 @@ export default async function apiFetch(endpoint: string, options: RequestInit = 
     if (!res.ok) {
       const data = await res.json();
       return {
-        data: null,
-        errors: data.detail,
+        error: data.detail,
         response: res
       }
     }
     const data = await res.json();
     return {
       data: data,
-      errors: null,
       response: res
     };
-  } catch (error) {
-    console.error('API Fetch Error:', error);
+  } catch (err) {
+    console.error('API Fetch Error:', err);
     return {
-      data: null,
-      errors: error,
-      response: null
+      error: err,
     }
   }
 }
+
+// import createClient from "openapi-fetch";
+// import type { paths } from "./openapi-schema";
+
+// export const api = createClient<paths>({
+//   baseUrl: PUBLIC_API_URL,
+// })
+
+// export async function safeApiRequest<T>(
+//   callback: () => Promise<T>,
+//   fallback?: T
+// ) {
+//   try {
+//     return await callback();
+//   } catch (error) {
+//     console.error('API Error:', error);
+//     return fallback;
+//   }
+// }
+
+import { createClient } from "@hey-api/client-fetch";
+
+export const api = createClient({
+  baseUrl: PUBLIC_API_URL,
+})

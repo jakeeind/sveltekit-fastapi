@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import apiFetch from '../lib/api';
+	import { api } from '../lib/api';
 
 	interface Item {
 		id: number;
@@ -10,15 +9,7 @@
 	let itemId = $state();
 	let item: Item | undefined = $state();
 
-	async function getItemById(id: number) {
-		const result = await apiFetch(`/items/${id}`);
-    console.log(result);
-		if (result.errors) {
-			console.error(result.errors);
-		} else {
-			item = result.data;
-		}
-	}
+	async function getItemById(id: number) {}
 </script>
 
 <h1>Welcome to SvelteKit</h1>
@@ -28,7 +19,6 @@
 	<p>item id</p>
 	<input type="text" bind:value={itemId} />
 	<button
-		disabled={!itemId}
 		onclick={async () => {
 			await getItemById(Number(itemId));
 		}}
