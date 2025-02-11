@@ -36,3 +36,43 @@ npm run build
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+
+
+# Client API Documentation
+
+## `apiFetch`
+
+The `apiFetch` function is an asynchronous function used to make HTTP requests to the API.
+
+### Parameters
+
+- `endpoint` (string): The API endpoint to which the request is made.
+- `options` (RequestInit): Optional configuration for the request, such as method, headers, body, etc.
+
+### Returns
+
+A promise that resolves to an object containing:
+- `data`: The response data if the request was successful, otherwise `null`.
+- `errors`: Any errors that occurred during the request, otherwise `null`.
+- `response`: The full response object if the request was successful, otherwise `null`.
+
+### Example Usage
+
+```typescript
+import apiFetch from './src/lib/api';
+
+async function fetchData() {
+  const result = await apiFetch('/example-endpoint');
+  if (result.errors) {
+    console.error('Error fetching data:', result.errors);
+  } else {
+    console.log('Data fetched successfully:', result.data);
+  }
+}
+
+fetchData();
+```
+
+### Error Handling
+
+If the request fails, the function will log the error to the console and return an object with `data` set to `null`, `errors` containing the error, and `response` set to `null`.
